@@ -1,4 +1,4 @@
-import { useMatrix } from '../context/MatrixContext';
+import { useMatrix } from '../context/useMatrix';
 
 export const Controls = () => {
   const { rows, cols, x, setRows, setCols, setX, generate } = useMatrix();
@@ -51,7 +51,7 @@ export const Controls = () => {
         />
       </label>
 
-      <button onClick={generate}>Generate Matrix</button>
+      <button className="generate-btn" onClick={generate}>Generate Matrix</button>
     </div>
   );
 };

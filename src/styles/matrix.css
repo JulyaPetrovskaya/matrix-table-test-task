@@ -10,6 +10,7 @@
   display: flex;
   gap: 16px;
   margin-bottom: 16px;
+  align-items: flex-end;
 }
 
 @media (max-width: 768px) {
@@ -36,8 +37,18 @@
   color: #555;
 }
 
+.generate-btn {
+  padding: 8px 14px;
+  font-size: 14px;
+  height: 36px;
+}
+
+.table-wrapper {
+  max-height: 60vh;
+  overflow: auto;
+}
+
 table {
-  margin-top: 16px;
   border-collapse: collapse;
 }
 
@@ -108,4 +119,3 @@ td.table-cell:active {
 .table-cell.heatmap {
   background-color: rgba(0, 123, 255, var(--heat));
 }
-

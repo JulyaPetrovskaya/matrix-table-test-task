@@ -1,9 +1,9 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useState, useMemo } from 'react';
 import type { ReactNode } from 'react';
 import type { Cell } from '../types/cell';
 import { generateMatrix } from '../utils/generateMatrix';
 
-type MatrixContextType = {
+export type MatrixContextType = {
   rows: number;
   cols: number;
   x: number;
@@ -25,14 +25,13 @@ type MatrixContextType = {
   handleAddRow: () => void;
 };
 
-const MatrixContext = createContext<MatrixContextType | null>(null);
+export const MatrixContext = createContext<MatrixContextType | null>(null);
 
 export const MatrixProvider = ({ children }: { children: ReactNode }) => {
   const [rows, setRows] = useState(0);
   const [cols, setCols] = useState(0);
   const [x, setX] = useState(0);
   const [matrix, setMatrix] = useState<Cell[][]>([]);
-  const [highlightedIds, setHighlightedIds] = useState<number[]>([]);
   const [hoveredRowIndex, setHoveredRowIndex] = useState<number | null>(null);
   const [hoveredCellId, setHoveredCellId] = useState<number | null>(null);
 
@@ -40,26 +39,22 @@ export const MatrixProvider = ({ children }: { children: ReactNode }) => {
     setMatrix(generateMatrix(rows, cols));
   };
 
-  useEffect(() => {
-    if (hoveredCellId === null) {
-      setHighlightedIds([]);
-      return;
-    }
+  const highlightedIds = useMemo(() => {
+    if (!hoveredCellId) return [];
 
     const allCells = matrix.flat();
     const hoveredCell = allCells.find((c) => c.id === hoveredCellId);
-    if (!hoveredCell) return;
+    if (!hoveredCell) return [];
 
-    const sortedByDistance = allCells
+    return allCells
       .filter((cell) => cell.id !== hoveredCellId)
       .sort(
         (a, b) =>
           Math.abs(a.amount - hoveredCell.amount) -
           Math.abs(b.amount - hoveredCell.amount)
-      );
-
-    const nearest = sortedByDistance.slice(0, x).map((cell) => cell.id);
-    setHighlightedIds(nearest);
+      )
+      .slice(0, x)
+      .map((cell) => cell.id);
   }, [matrix, hoveredCellId, x]);
 
   const handleCellClick = (rowIndex: number, colIndex: number) => {
@@ -80,7 +75,6 @@ export const MatrixProvider = ({ children }: { children: ReactNode }) => {
 
   const handleCellLeave = () => {
     setHoveredCellId(null);
-    setHighlightedIds([]);
   };
 
   const handleRowSumHover = (rowIndex: number) => {
@@ -133,12 +127,4 @@ export const MatrixProvider = ({ children }: { children: ReactNode }) => {
       {children}
     </MatrixContext.Provider>
   );
-};
-
-export const useMatrix = () => {
-  const context = useContext(MatrixContext);
-  if (!context) {
-    throw new Error('useMatrix must be used within MatrixProvider');
-  }
-  return context;
 };

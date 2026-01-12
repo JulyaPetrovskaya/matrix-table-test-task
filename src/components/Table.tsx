@@ -1,6 +1,6 @@
 import { getPercentile60 } from '../utils/getPercentile60';
 import type { Cell } from '../types/cell';
-import { useMatrix } from '../context/MatrixContext';
+import { useMatrix } from '../context/useMatrix';
 
 export const Table = () => {
   const {
