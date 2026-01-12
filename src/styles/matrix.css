@@ -43,13 +43,17 @@
   height: 36px;
 }
 
+table {
+  width: max-content;
+  border-collapse: collapse;
+}
+
 .table-wrapper {
   max-height: 60vh;
   overflow: auto;
-}
-
-table {
-  border-collapse: collapse;
+  width: fit-content;
+  max-width: 100%;
+  border: 1px solid #ddd;
 }
 
 td {
